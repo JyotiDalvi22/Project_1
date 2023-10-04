@@ -1,0 +1,56 @@
+class Task:
+    def __init__(self, description, start_time):
+        self.description = description
+        self.start_time = start_time
+        self.completed = False
+
+# Function to display all tasks
+def display_tasks(tasks):
+    print("\nTask List:")
+    for i, task in enumerate(tasks, 1):
+        hours = task.start_time
+        am_pm = "am" if hours < 12 else "pm"
+        if hours > 12:
+            hours -= 12
+        print(f"{i}. {task.description}, Time: {hours} {am_pm} - {'Completed' if task.completed else 'Pending'}")
+    print("\n")
+
+# Function to mark a task as completed
+def mark_as_completed(tasks, task_index):
+    if 0 <= task_index < len(tasks) and not tasks[task_index].completed:
+        tasks[task_index].completed = True
+        print("Task marked as completed.")
+    else:
+        print("Invalid task index or task already completed.")
+
+# Function to check if all tasks are completed
+def all_tasks_completed(tasks):
+    return all(task.completed for task in tasks)
+
+def main():
+    # Example task manager
+    tasks = []  # Using a list to store tasks
+    num_tasks = int(input("Enter the number of tasks: "))
+
+    # Input tasks from the user
+    for i in range(num_tasks):
+        description = input(f"Enter description for Task {i + 1}: ")
+        start_time = int(input(f"Enter start time for Task {i + 1}: "))
+        tasks.append(Task(description, start_time))
+
+    # Display initial task list
+    display_tasks(tasks)
+
+    # Mark tasks as completed until all are done
+    while not all_tasks_completed(tasks):
+        completed_task_index = int(input("Enter the index of the task completed (0 to end): "))
+        if completed_task_index == 0:
+            break  # User wants to end the program
+        mark_as_completed(tasks, completed_task_index - 1)  # Adjust index to 0-based
+        display_tasks(tasks)
+
+    # Display a message when all tasks are completed
+    print("\nGood job! All tasks completed.")
+
+if __name__ == "__main__":
+    main()
