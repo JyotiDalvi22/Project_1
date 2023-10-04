@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+// Structure to represent a task
+struct Task {
+    char description[100];
+    int startTime;
+    bool completed;
+};
+
+// Function to display all tasks
+void displayTasks(struct Task tasks[], int n) {
+    printf("\nTask List:\n");
+    for (int i = 0; i < n; ++i) {
+        int hours = tasks[i].startTime;
+        char am_pm[3];
+
+        if (hours >= 12) {
+            if (hours > 12) {
+                hours -= 12;
+            }
+            strcpy(am_pm, "pm");
+        } else {
+            strcpy(am_pm, "am");
+        }
+
+        printf("%d. %s, Time: %d %s - %s\n", i + 1, tasks[i].description, hours, am_pm,
+               tasks[i].completed ? "Completed" : "Pending");
+    }
+    printf("\n");
+}
+
+// Function to mark a task as completed
+void markAsCompleted(struct Task tasks[], int n, int taskIndex) {
+    if (taskIndex >= 0 && taskIndex < n && !tasks[taskIndex].completed) {
+        tasks[taskIndex].completed = true;
+        printf("Task marked as completed.\n");
+    } else {
+        printf("Invalid task index or task already completed.\n");
+    }
+}
+
+// Function to check if all tasks are completed
+bool allTasksCompleted(struct Task tasks[], int n) {
+    for (int i = 0; i < n; ++i) {
+        if (!tasks[i].completed) {
+            return false; // At least one task is pending
+        }
+    }
+    return true; // All tasks are completed
+}
+
+int main() {
+    // Example task manager
+    struct Task tasks[10]; // Assuming a maximum of 10 tasks
+    int numTasks;
+
+    // Get the number of tasks from the user
+    printf("Enter the number of tasks: ");
+    scanf("%d", &numTasks);
+
+    // Input tasks from the user
+    for (int i = 0; i < numTasks; ++i) {
+    printf("Enter description for Task %d: ", i + 1);
+    scanf(" %99[^\n]", tasks[i].description); // Use %99[^\n] to read the entire line
+
+    printf("Enter start time for Task %d: ", i + 1);
+    scanf("%d", &tasks[i].startTime); // Use %d to read an integer
+
+    tasks[i].completed = false; // Initialize all tasks as not completed
+}
+
+    // Display initial task list
+    displayTasks(tasks, numTasks);
+
+    // Mark tasks as completed until all are done
+    while (!allTasksCompleted(tasks, numTasks)) {
+        int completedTaskIndex;
+        printf("Enter the index of the task completed (0 to end): ");
+        scanf("%d", &completedTaskIndex);
+
+        if (completedTaskIndex == 0) {
+            break; // User wants to end the program
+        }
+
+        markAsCompleted(tasks, numTasks, completedTaskIndex - 1); // Adjust index to 0-based
+        displayTasks(tasks, numTasks);
+    }
+
+    // Display a message when all tasks are completed
+    printf("\nGood job! All tasks completed.\n");
+
+    return 0;
+}
